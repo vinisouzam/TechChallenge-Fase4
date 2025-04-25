@@ -1,0 +1,10 @@
+pandas
+streamlit
+numpy
+scikit-learn
+plotly
+requests
+yfinance
+ipeadata
+statsmodels
+openpyxl
