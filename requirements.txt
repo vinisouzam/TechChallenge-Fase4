@@ -8,3 +8,4 @@ yfinance
 ipeadata
 statsmodels
 openpyxl
+ipeadatapy
