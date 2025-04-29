@@ -58,7 +58,6 @@ fig = px.line(
 fig.update_layout(
     title_x=0.5,
 )
-
 fig.show()
 # %%
 
@@ -84,19 +83,42 @@ plt.show()
 # %%
 # Checking stationarity using rolling statistics
 
-rolling_mean = data_nonan['VALUE_US$'].rolling(window=90).mean()
-rolling_std = data_nonan['VALUE_US$'].rolling(window=90).std()
+rolling_mean = data_nonan['VALUE_US$'].rolling(window=45).mean()
+rolling_std = data_nonan['VALUE_US$'].rolling(window=45).std()
+rolling_var = data_nonan['VALUE_US$'].rolling(window=45).var()
 
-# def great_change(window_data):
-#     return window_data.max() - window_data.min()
-# df_great_change = data_nonan['VALUE_US$'].rolling(
-    # window=90).apply(great_change)
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=data_nonan.index, 
+                         y=data_nonan['VALUE_US$'], 
+                         mode='lines', 
+                         name='Original')
+              )
+fig.add_trace(go.Scatter(x=data_nonan.index, 
+                         y=rolling_mean, 
+                         mode='lines', 
+                         name='Rolling Mean')
+              )
+fig.add_trace(go.Scatter(x=data_nonan.index, 
+                         y=rolling_std, 
+                         mode='lines', 
+                         name='Rolling Std')
+              )
+fig.add_trace(go.Scatter(x=data_nonan.index, 
+                         y=rolling_var, 
+                         mode='lines', 
+                         name='Rolling Var'))
+fig.update_layout(
+    title='Rolling Mean & Standard Deviation',
+    xaxis_title='Date',
+    yaxis_title='Brent Crude Oil Price (US$)',
+    legend_title='Legend',
+    title_x=0.5,
+)
+fig.show()
+# %%
+fig.write_html('rolling_mean_std.html')
 
-plt.figure(figsize=(10, 6))
-plt.plot(data_nonan['VALUE_US$'], label='Original', color='blue')
-plt.plot(rolling_mean, label='Rolling Mean', color='red')
-plt.plot(rolling_std, label='Rolling Std', color='black')
-plt.legend(loc='best')
-plt.title('Rolling Mean & Standard Deviation')
-plt.show()
+# %%
+
+data_nonan.loc[slice(None),'change'] = data_nonan['VALUE_US$'].pct_change().fillna(0) +1
 # %%
